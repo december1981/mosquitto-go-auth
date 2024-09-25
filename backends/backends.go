@@ -39,7 +39,6 @@ const (
 	httpBackend     = "http"
 	filesBackend    = "files"
 	mysqlBackend    = "mysql"
-	sqliteBackend   = "sqlite"
 	mongoBackend    = "mongo"
 	pluginBackend   = "plugin"
 	grpcBackend     = "grpc"
@@ -62,7 +61,6 @@ var allowedBackendsOptsPrefix = map[string]string{
 	httpBackend:     "http",
 	filesBackend:    "files",
 	mysqlBackend:    "mysql",
-	sqliteBackend:   "sqlite",
 	mongoBackend:    "mongo",
 	pluginBackend:   "plugin",
 	grpcBackend:     "grpc",
@@ -156,14 +154,6 @@ func (b *Backends) addBackends(authOpts map[string]string, logLevel log.Level, b
 				log.Infof("Backend registered: %s", beIface.GetName())
 				b.backends[redisBackend] = beIface.(Redis)
 			}
-		case mysqlBackend:
-			beIface, err = NewMysql(authOpts, logLevel, hasher)
-			if err != nil {
-				log.Fatalf("Backend register error: couldn't initialize %s backend with error %s.", bename, err)
-			} else {
-				log.Infof("Backend registered: %s", beIface.GetName())
-				b.backends[mysqlBackend] = beIface.(Mysql)
-			}
 		case httpBackend:
 			beIface, err = NewHTTP(authOpts, logLevel, version)
 			if err != nil {
@@ -171,14 +161,6 @@ func (b *Backends) addBackends(authOpts map[string]string, logLevel log.Level, b
 			} else {
 				log.Infof("Backend registered: %s", beIface.GetName())
 				b.backends[httpBackend] = beIface.(HTTP)
-			}
-		case sqliteBackend:
-			beIface, err = NewSqlite(authOpts, logLevel, hasher)
-			if err != nil {
-				log.Fatalf("Backend register error: couldn't initialize %s backend with error %s.", bename, err)
-			} else {
-				log.Infof("Backend registered: %s", beIface.GetName())
-				b.backends[sqliteBackend] = beIface.(Sqlite)
 			}
 		case mongoBackend:
 			beIface, err = NewMongo(authOpts, logLevel, hasher)
